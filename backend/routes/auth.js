@@ -36,17 +36,58 @@ router.post('/createuser', [
             })
             // response token
             const data = {
-                user:{
+                user: {
                     id: user.id,
                 }
             }
             const authtoken = jwt.sign(data, JWT_SECRET)
+            res.json({ authtoken: authtoken })
 
-            res.json({authtoken: authtoken})
         } catch (error) {
             console.error(error.message)
-            res.status(500).send('something went wrong')
+            res.status(500).send('internal server error')
         }
     })
+
+// login a user using" POST "/api/auth/login". No login required
+router.post('/login', [
+    body('email', 'Enter a valid email').isEmail(),
+    body('password', 'Password cannot be blank').exists(),
+],
+    async (req, res) => {
+        // if there are errors, return bad request and errors
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        // destructuring email and password from req.body
+        const {email, password} = req.body
+        try {
+            let user = await User.findOne({ email: email})
+            if(!user){
+                return res.status(400).json({ error: 'email or password is incorrect' })
+            }
+            // if valid email and password, then compare password
+            const passwordCompare = await bcrypt.compare(password, user.password)
+            // if password not matched
+            if(!passwordCompare){
+                return res.status(400).json({ error: 'email or password is incorrect' })
+            }
+            // if match, then send user data
+            const data = {
+                user: {
+                    id: user.id,
+                }
+            }
+
+            const authtoken = jwt.sign(data, JWT_SECRET)
+            res.json({ authtoken: authtoken })
+
+        } catch (error) {
+            console.error(error.message)
+            res.status(500).send('internal server error')
+        }
+    })
+
 
 module.exports = router
