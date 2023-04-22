@@ -1,0 +1,17 @@
+.fa-trash {
+    cursor: pointer;
+    color: red;
+}
+.fa-trash:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    transform: scale(1.2);
+}
+
+.fa-pen-to-square {
+    cursor: pointer;
+    color: green;
+}
+.fa-pen-to-square:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    transform: scale(1.2);
+}

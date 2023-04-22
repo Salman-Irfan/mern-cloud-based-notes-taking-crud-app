@@ -1,0 +1,24 @@
+[
+  {
+    "_id": "0f3eda65-2fe1-4d81-802d-e88c7bfb6d69",
+    "colName": "iNotebook",
+    "created": "2023-04-21T14:29:35.658Z",
+    "sortNum": 10000,
+    "folders": [
+      {
+        "_id": "5c3ef0d3-e6ec-427a-846d-7c13a8ce36f6",
+        "name": "users",
+        "containerId": "",
+        "created": "2023-04-21T14:29:41.650Z",
+        "sortNum": 10000
+      },
+      {
+        "_id": "6ac0c95a-5dbc-440f-ab50-de78c81dc949",
+        "name": "notes",
+        "containerId": "",
+        "created": "2023-04-21T14:29:48.828Z",
+        "sortNum": 20000
+      }
+    ]
+  }
+]
