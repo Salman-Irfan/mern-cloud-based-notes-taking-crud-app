@@ -23,7 +23,7 @@ const AddNote = () => {
                         <label
                             htmlFor="title"
                             className="form-label">
-                            Title
+                            <strong>Title</strong>
                         </label>
                         <input
                             type="text"
@@ -39,7 +39,7 @@ const AddNote = () => {
                         <label
                             htmlFor="description"
                             className="form-label">
-                            Description
+                            <strong>Description</strong>
                         </label>
                         <input
                             type="text"
@@ -47,6 +47,21 @@ const AddNote = () => {
                             id="description"
                             name="description"
                             placeholder="Enter description"
+                            onChange={onChange}
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <label
+                            htmlFor="tag"
+                            className="form-label">
+                            <strong>Tag</strong>
+                        </label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            id="tag"
+                            name="tag"
+                            placeholder="Enter tag name"
                             onChange={onChange}
                         />
                     </div>
