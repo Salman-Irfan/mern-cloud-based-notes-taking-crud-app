@@ -3,27 +3,45 @@ import noteContext from "../context/notes/noteContext";
 import Noteitem from "./Noteitem";
 import AddNote from "./AddNote";
 
-const Notes = () => {
+const Notes = (props) => {
     const context = useContext(noteContext);
 
-    const { notes, getNotes } = context; // destructuring
+    const { notes, getNotes, editNote } = context; // destructuring
 
     useEffect(() => {
-        getNotes();
+        if(localStorage.getItem('token')){ // if user has login token, see notes
+            getNotes();
+        }else{ // redirect to login
+            window.location.href = "/login";
+        }
+        // eslint-disable-next-line
     }, []);
-    
+
     const ref = useRef(null);
-    
-    const [note, setNote] = useState({etitle: "", edescription: "", etag:""})
-    
+    const refClose = useRef(null);
+
+    const [note, setNote] = useState({
+        id: "",
+        etitle: "",
+        edescription: "",
+        etag: "",
+    });
+
     const updateNote = (currentNote) => {
-        ref.current.click()
-        setNote({etitle: currentNote.title, edescription: currentNote.description, etag: currentNote.tag})
+        ref.current.click();
+        setNote({
+            id: currentNote._id,
+            etitle: currentNote.title,
+            edescription: currentNote.description,
+            etag: currentNote.tag,
+        });
     };
 
     const handleUpdateNote = (e) => {
-        console.log('updating the note', note)
-        e.preventDefault();
+        console.log("updating the note", note);
+        editNote(note.id, note.etitle, note.edescription, note.etag);
+        refClose.current.click();
+        props.showAlert("Updated Successfully", "success");
     };
 
     const onChange = (e) => {
@@ -31,7 +49,7 @@ const Notes = () => {
     };
     return (
         <>
-            <AddNote />
+            <AddNote showAlert={props.showAlert} />
             {/* Button trigger modal */}
             <button
                 ref={ref}
@@ -83,6 +101,8 @@ const Notes = () => {
                                             placeholder="Update title"
                                             value={note.etitle}
                                             onChange={onChange}
+                                            minLength={5}
+                                            required
                                         />
                                     </div>
                                     <div className="mb-3">
@@ -99,6 +119,8 @@ const Notes = () => {
                                             placeholder="Update description"
                                             value={note.edescription}
                                             onChange={onChange}
+                                            minLength={5}
+                                            required
                                         />
                                     </div>
                                     <div className="mb-3">
@@ -115,22 +137,25 @@ const Notes = () => {
                                             placeholder="Update tag name"
                                             value={note.etag}
                                             onChange={onChange}
+                                            minLength={5}
+                                            required
                                         />
                                     </div>
                                 </form>
                             </div>
                             <div className="modal-footer">
                                 <button
+                                    ref={refClose}
                                     type="button"
                                     className="btn btn-secondary"
                                     data-bs-dismiss="modal">
                                     Close
                                 </button>
                                 <button
+                                    disabled={ note.etitle.length < 5 || note.edescription.length < 5 }
                                     type="button"
                                     className="btn btn-primary"
-                                    onClick={handleUpdateNote}
-                                >
+                                    onClick={handleUpdateNote}>
                                     Update Note
                                 </button>
                             </div>
@@ -141,12 +166,16 @@ const Notes = () => {
 
             <div className="row my-3">
                 <h2>Your Notes</h2>
+                <div className="container mx-2">
+                    {notes.length === 0 && "No notes to display"}
+                </div>
                 {notes.map((note) => {
                     return (
                         <Noteitem
                             key={note._id}
                             updateNote={updateNote}
                             note={note}
+                            showAlert={props.showAlert}
                         />
                     );
                 })}

@@ -1,14 +1,16 @@
 import React, { useContext, useState } from "react";
 import noteContext from "../context/notes/noteContext";
 
-const AddNote = () => {
-    const [note, setNote] = useState({title: "", description: "", tag:"default"})
+const AddNote = (props) => {
+    const [note, setNote] = useState({title: "", description: "", tag:""})
     const context = useContext(noteContext);
     const { addNote } = context; // destructuring
 
     const handleAddNote = (e) => {
         e.preventDefault();
         addNote(note.title, note.description, note.tag);
+        setNote({ title: "", description: "", tag: "" });
+        props.showAlert("Addeded Successfully", "success");
     }
 
     const onChange = (e) => {
@@ -31,8 +33,11 @@ const AddNote = () => {
                             id="title"
                             aria-describedby="emailHelp"
                             name="title"
+                            value={note.title}
                             placeholder="Enter title"
                             onChange={onChange}
+                            minLength={5}
+                            required
                         />
                     </div>
                     <div className="mb-3">
@@ -46,8 +51,11 @@ const AddNote = () => {
                             className="form-control"
                             id="description"
                             name="description"
+                            value={note.description}
                             placeholder="Enter description"
                             onChange={onChange}
+                            minLength={5}
+                            required
                         />
                     </div>
                     <div className="mb-3">
@@ -61,12 +69,18 @@ const AddNote = () => {
                             className="form-control"
                             id="tag"
                             name="tag"
+                            value={note.tag}
                             placeholder="Enter tag name"
                             onChange={onChange}
+                            minLength={5}
+                            required
                         />
                     </div>
 
                     <button
+                        disabled={
+                            note.title.length < 5 || note.description.length < 5
+                        }
                         type="submit"
                         className="btn btn-primary"
                         onClick={handleAddNote}>
